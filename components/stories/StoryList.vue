@@ -38,12 +38,12 @@ const columns: Column[] = [
   { key: "image", label: "Image", width: "1fr", sortable: false },
   { key: "title", label: "Article title", width: "2fr", sortable: false },
   { key: "time", label: "DateTime", width: "1fr", sortable: true },
-  { key: "score", label: "Article score", width: "0.6fr", sortable: true },
-  { key: "id", label: "Author ID", width: "1fr", sortable: false },
+  { key: "score", label: "Score", width: "0.7fr", sortable: true },
+  { key: "id", label: "Author ID", width: "0.5fr", sortable: false },
   {
     key: "karma",
-    label: "Author karma score",
-    width: "0.6fr",
+    label: "karma",
+    width: "0.5fr",
     sortable: false,
   },
 ];
