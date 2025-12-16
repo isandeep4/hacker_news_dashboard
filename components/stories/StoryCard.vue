@@ -1,12 +1,22 @@
 <template>
   <NuxtLink :to="`/stories/${story.id}`" class="grid-table__row">
     <div v-for="col in columns" :key="col.key" :data-label="col.label">
-      <template v-if="col.key === 'image'">
+      <div v-if="col.key === 'image'">
         <img :src="story[col.key]" alt="item image" width="50" height="50" />
-      </template>
-      <template v-else>
+      </div>
+      <div v-else-if="col.key === 'title'">
+        <a
+          :href="story.url"
+          target="_blank"
+          rel="noopener noreferrer"
+          @click.stop
+        >
+          {{ story.title }}
+        </a>
+      </div>
+      <div v-else>
         {{ story[col.key] }}
-      </template>
+      </div>
     </div>
   </NuxtLink>
 </template>
