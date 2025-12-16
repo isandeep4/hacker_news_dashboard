@@ -27,6 +27,18 @@ $breakpoint-md: 768px;
     font-weight: 600;
     background: $bg-header;
     border-radius: $radius-sm;
+    .header-cell.sortable {
+      cursor: pointer;
+      user-select: none;
+    }
+    .sort-icon {
+      margin-left: 6px;
+      font-size: 12px;
+    }
+
+    .sort-icon .inactive {
+      opacity: 0.3;
+    }
   }
 
   &__row {

@@ -14,7 +14,6 @@ export default defineEventHandler(async () => {
     while (selectedIds.size < totalIdsToBeSelected) {
       const randomIndex = Math.floor(Math.random() * allStoryIds.length);
       const storyId = allStoryIds[randomIndex];
-
       if (storyId) {
         selectedIds.add(storyId);
       }
@@ -27,18 +26,20 @@ export default defineEventHandler(async () => {
       )
     );
     const storyList = await Promise.all(promises);
+
     const modifiedStories = await Promise.all(
       storyList.map(async (story) => {
         const userDetails = await getUserDetails(story.by);
         return {
           ...story,
+          time: new Date(story.time * 1000).toLocaleString(),
           karma: userDetails.karma,
           image: "/images/image_1.jpg",
         };
       })
     );
-
-    return modifiedStories;
+    const sortedStories = modifiedStories.sort((a, b) => a.score - b.score);
+    return sortedStories;
   } catch (error) {
     console.log(error);
   }
