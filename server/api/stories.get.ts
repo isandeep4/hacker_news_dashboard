@@ -1,4 +1,13 @@
-import { getUserDetails } from "../services/getUserDetails";
+import { getUserDetails, UserResponse } from "../services/getUserDetails";
+export interface StoryResponse {
+  id: number;
+  by: string;
+  title: string;
+  url?: string;
+  score: number;
+  time: number;
+  [key: string]: any;
+}
 
 export default defineEventHandler(async () => {
   try {
@@ -8,8 +17,8 @@ export default defineEventHandler(async () => {
     if (!response.ok) {
       throw new Error("Failed with netwrok error");
     }
-    const allStoryIds = await response.json();
-    const selectedIds = new Set();
+    const allStoryIds: number[] = await response.json();
+    const selectedIds = new Set<number>();
     const totalIdsToBeSelected = 10;
     while (selectedIds.size < totalIdsToBeSelected) {
       const randomIndex = Math.floor(Math.random() * allStoryIds.length);
@@ -20,27 +29,45 @@ export default defineEventHandler(async () => {
     }
 
     const getTenRandomStoryids = Array.from(selectedIds);
-    const promises = getTenRandomStoryids.map((id: any) =>
-      fetch(`https://hacker-news.firebaseio.com/v0/item/${id}.json`).then(
-        (response) => response.json()
-      )
-    );
-    const storyList = await Promise.all(promises);
+    const promises = getTenRandomStoryids.map(async (id: any) => {
+      try {
+        const res = await fetch(
+          `https://hacker-news.firebaseio.com/v0/item/${id}.json`
+        );
+        if (!res.ok) throw new Error(`Failed to fetch story ${id}`);
+        return res.json() as Promise<StoryResponse>;
+      } catch (error) {
+        console.error(`Error fetching story ${id}:`, error);
+        return null;
+      }
+    });
+    const storyList = (await Promise.all(promises)) as StoryResponse[];
 
     const modifiedStories = await Promise.all(
       storyList.map(async (story) => {
-        const userDetails = await getUserDetails(story.by);
-        return {
-          ...story,
-          time: new Date(story.time * 1000).toLocaleString(),
-          karma: userDetails.karma,
-          image: "/images/image_1.jpg",
-        };
+        try {
+          const userDetails = (await getUserDetails(story.by)) as UserResponse;
+          return {
+            ...story,
+            time: new Date(story.time * 1000).toLocaleString(),
+            karma: userDetails.karma,
+            image: "/images/image_1.jpg",
+          };
+        } catch (error) {
+          console.error(`Failed to get user details for ${story.by}`, error);
+          return {
+            ...story,
+            time: new Date(story.time * 1000).toLocaleString(),
+            karma: 0,
+            image: "/images/image_1.jpg",
+          };
+        }
       })
     );
-    const sortedStories = modifiedStories.sort((a, b) => a.score - b.score);
+    const sortedStories = modifiedStories.sort((a, b) => b.score - a.score);
     return sortedStories;
   } catch (error) {
-    console.log(error);
+    console.log("Failed to fetch top stories:", error);
+    return [];
   }
 });
