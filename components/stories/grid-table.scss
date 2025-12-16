@@ -27,10 +27,20 @@ $breakpoint-md: 768px;
     font-weight: 600;
     background: $bg-header;
     border-radius: $radius-sm;
-    .header-cell.sortable {
-      cursor: pointer;
-      user-select: none;
+    .header-cell {
+      &:focus {
+        outline: 2px solid #2563eb; // visible focus indicator
+        outline-offset: 2px;
+      }
+      &.sortable {
+        cursor: pointer;
+
+        &:hover {
+          background: #e5e7eb;
+        }
+      }
     }
+
     .sort-icon {
       margin-left: 6px;
       font-size: 12px;
@@ -53,6 +63,11 @@ $breakpoint-md: 768px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
     &:hover {
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    &:hover,
+    &:focus {
+      background-color: #f9fafb;
+      outline: 2px solid #2563eb;
     }
   }
   @media (max-width: $breakpoint-md) {

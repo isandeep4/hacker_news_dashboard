@@ -1,8 +1,24 @@
 <template>
-  <NuxtLink :to="`/stories/${story.id}`" class="grid-table__row">
-    <div v-for="col in columns" :key="col.key" :data-label="col.label">
+  <NuxtLink
+    :to="`/stories/${story.id}`"
+    class="grid-table__row"
+    role="row"
+    :aria-label="`Story: ${story.title}, by ${story.by}, score ${story.score}`"
+  >
+    <div
+      v-for="col in columns"
+      :key="col.key"
+      :data-label="col.label"
+      role="cell"
+      class="cell"
+    >
       <div v-if="col.key === 'image'">
-        <img :src="story[col.key]" alt="item image" width="50" height="50" />
+        <img
+          :src="story[col.key]"
+          :alt="`Image for ${story.title}`"
+          width="50"
+          height="50"
+        />
       </div>
       <div v-else-if="col.key === 'title'">
         <a

@@ -1,12 +1,27 @@
 <template>
-  <div class="grid-table" :style="{ '--grid-columns': gridTemplateColumns }">
-    <div class="grid-table__header">
+  <div
+    class="grid-table"
+    :style="{ '--grid-columns': gridTemplateColumns }"
+    role="table"
+    :aria-label="'Story list table'"
+  >
+    <div class="grid-table__header" role="rowgroup">
       <div
         v-for="col in columns"
         :key="col.key"
         @click="onSort(col)"
         class="header-cell"
         :class="{ sortable: col.sortable }"
+        role="columnheader"
+        :aria-sort="
+          sortKey === col.key
+            ? sortOrder === 'asc'
+              ? 'ascending'
+              : 'descending'
+            : 'none'
+        "
+        tabindex="0"
+        @keydown.enter.space="col.sortable ? onSort(col) : null"
       >
         {{ col.label }}
         <span v-if="col.sortable" class="sort-icon">
@@ -17,12 +32,13 @@
         </span>
       </div>
     </div>
-    <div v-if="stories.length">
+    <div v-if="stories.length" role="rowgroup">
       <StoryCard
         v-for="story in sortedStories"
         :key="story.id"
         :story="story"
         :columns="columns"
+        role="row"
       />
     </div>
   </div>
