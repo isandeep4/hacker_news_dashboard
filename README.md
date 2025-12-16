@@ -1,7 +1,3 @@
-# Nuxt Minimal Starter
-
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
-
 ## Setup
 
 Make sure to install dependencies:
@@ -38,38 +34,23 @@ yarn dev
 bun run dev
 ```
 
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+- Implementation Details
+  - Home Page
+    - Displayed Story list in a grid layout
+    - Created story card and Story List Components
+    - Fetched top 10 stories randomly from hacker-news end point using composable for caching and state handling
+    - Retrieved user karma score by calling User endpoint using story by field
+    - Aggregated and Formatted repsonse for story card data
+    - Implemented sorting functionality on score and datetime column
+    - used grid-template-column for responsive grid layout
+  - Story Details Page
+    - Navigate to story details page on click of each story row
+    - Retrieved story details from cached API response and using route params id
+    - added back to story button to navigate back to Home page
+  - Accessibility:
+    - focus headers with Tab and sort with Enter or Space.
+    - Screen readers correctly announce the table, headers, and rows.
+  - Performance:
+    - Uses useAsyncData to fetch data during SSR
+    - Nuxt Payload stores server-fetched data, so the client does not refetch unnecessarily
+    - images in public/ are optimized
